@@ -1,5 +1,14 @@
-# FindIt AI - Smart Lost & Found for Campuses
+# 🔎 FindIt AI
+### 🚀 [Click here to use the Live App](https://ayushitelrandhe.github.io/FindIt/)
 
+---
+
+![Project Screenshot](Screenshot 2026-01-08 200853.jpg)
+
+### About the Project
+FindIt AI is a smart Lost & Found platform for campuses powered by AI matching.
+
+# FindIt AI - Smart Lost & Found for Campuses
 A hackathon-ready MVP demonstrating AI-based matching and intelligent agent logic for campus lost and found items.
 
 ## 🚀 Features
