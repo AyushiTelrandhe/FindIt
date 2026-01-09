@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindIt AI - Smart Lost & Found</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .page { display: none; }
+        .page.active { display: block; }
+        .notification {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Professional blue gradient background */
+        body {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+        
+        /* Subtle floating animation for buttons */
+        .float-animation {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        /* Professional pulse animation for important elements */
+        .pulse-animation {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        /* Professional button hover effects */
+        .professional-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .professional-button:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* White text for all elements */
+        .text-white {
+            color: white !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Home Page -->
+    <div id="homePage" class="page active">
+        <div class="container mx-auto px-4 py-12">
+            <div class="text-center mb-12">
+                <h1 class="text-6xl font-bold text-white mb-4 pulse-animation">🔍 FindIt AI ✨</h1>
+                <p class="text-2xl text-white mb-2 float-animation">Smart Lost & Found for Campuses</p>
+                <p class="text-lg text-white">Powered by AI matching and intelligent agents</p>
+            </div>
+            
+            <div class="max-w-md mx-auto space-y-4">
+                <button onclick="showPage('lostPage')" class="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-6 px-8 rounded-xl shadow-lg professional-button float-animation">
+                    <div class="text-3xl mb-2 text-white">🔍</div>
+                    <div class="text-lg text-white">Report Lost Item</div>
+                    <div class="text-sm text-white">I lost something</div>
+                </button>
+                
+                <button onclick="showPage('foundPage')" class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-6 px-8 rounded-xl shadow-lg professional-button float-animation" style="animation-delay: 0.2s;">
+                    <div class="text-3xl mb-2 text-white">✅</div>
+                    <div class="text-lg text-white">Report Found Item</div>
+                    <div class="text-sm text-white">I found something</div>
+                </button>
+                
+                <button onclick="showPage('matchesPage')" class="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg professional-button float-animation" style="animation-delay: 0.4s;">
+                    <div class="text-lg text-white">🎯 AI Matches</div>
+                </button>
+                
+                <button onclick="showPage('statsPage')" class="w-full bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg professional-button float-animation" style="animation-delay: 0.6s;">
+                    <div class="text-lg text-white">📊 Statistics</div>
+                </button>
+                
+                <button onclick="showPage('myReportsPage')" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg professional-button float-animation" style="animation-delay: 0.8s;">
+                    <div class="text-lg text-white">📋 My Reports</div>
+                </button>
+                
+                <button onclick="showPage('chatPage')" class="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg professional-button float-animation" style="animation-delay: 1s;">
+                    <div class="text-lg text-white">💬 Chat</div>
+                </button>
+                
+                <button onclick="clearAllData()" class="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-4 rounded-xl shadow-lg professional-button text-sm">
+                    <div class="text-sm text-white">🗑️ Clear All Data [reset]</div>
+                </button>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Chat Page -->
+    <div id="chatPage" class="page">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-teal-600 mb-6">💬 Chat</h2>
+                
+                <div class="bg-white rounded-xl shadow-xl p-6">
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">🔍 Select User to Chat With</label>
+                        <select id="userSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
+                            <option value="">Select a user...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+                        <div class="lg:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">💬 Message</label>
+                            <textarea id="chatMessage" rows="3" placeholder="Type your message here..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500"></textarea>
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="sendMessage()" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-6 rounded-lg">
+                                📤 Send Message
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">📋 Active Users</h3>
+                        <div id="activeUsersList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            <!-- Active users will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="border-t pt-4">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">💭 Chat Messages</h3>
+                        <div id="chatMessages" class="space-y-3 max-h-96 overflow-y-auto">
+                            <!-- Chat messages will be displayed here -->
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4 mt-6">
+                        <button onclick="showPage('homePage')" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg">
+                            🏠 Back to Home
+                        </button>
+                        <button onclick="clearChat()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-lg">
+                            🗑️ Clear Chat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lost Item Form -->
+    <div id="lostPage" class="page">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-red-600 mb-6">Report Lost Item</h2>
+                <form id="lostForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">👤 Your Name</label>
+                        <input type="text" id="lostUserName" placeholder="Enter your name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Item Name</label>
+                        <input type="text" id="lostItemName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Color</label>
+                            <select id="lostColor" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                                <option value="">Select color</option>
+                                <option value="black">Black</option>
+                                <option value="white">White</option>
+                                <option value="red">Red</option>
+                                <option value="blue">Blue</option>
+                                <option value="green">Green</option>
+                                <option value="yellow">Yellow</option>
+                                <option value="gray">Gray</option>
+                                <option value="brown">Brown</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <select id="lostCategory" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                                <option value="">Select category</option>
+                                <option value="phone">Phone</option>
+                                <option value="wallet">Wallet</option>
+                                <option value="keys">Keys</option>
+                                <option value="laptop">Laptop</option>
+                                <option value="headphones">Headphones</option>
+                                <option value="jewelry">Jewelry</option>
+                                <option value="bag">Bag</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="books">Books</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <textarea id="lostDescription" rows="3" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"></textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Lost Location</label>
+                            <input type="text" id="lostLocation" placeholder="e.g., Library, Room 201" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">📍 Pickup Location</label>
+                            <input type="text" id="lostPickupLocation" placeholder="Where can you collect it?" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Image (optional)</label>
+                        <input type="file" id="lostImage" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">📧 Contact Information</label>
+                        <input type="email" id="lostContact" placeholder="your.email@example.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">📱 Mobile Number (Optional)</label>
+                        <input type="tel" id="lostMobile" placeholder="+91 98765 43210" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                        <div class="text-xs text-gray-500 mt-1">For faster pickup coordination</div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg">
+                            📝 Report Lost Item
+                        </button>
+                        <button type="button" onclick="showPage('homePage')" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg">
+                            🏠 Back
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Found Item Form -->
+    <div id="foundPage" class="page">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-green-600 mb-6">Report Found Item</h2>
+                <form id="foundForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">👤 Your Name</label>
+                        <input type="text" id="foundUserName" placeholder="Enter your name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Item Name</label>
+                        <input type="text" id="foundItemName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Color</label>
+                            <select id="foundColor" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                                <option value="">Select color</option>
+                                <option value="black">Black</option>
+                                <option value="white">White</option>
+                                <option value="red">Red</option>
+                                <option value="blue">Blue</option>
+                                <option value="green">Green</option>
+                                <option value="yellow">Yellow</option>
+                                <option value="gray">Gray</option>
+                                <option value="brown">Brown</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <select id="foundCategory" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                                <option value="">Select category</option>
+                                <option value="phone">Phone</option>
+                                <option value="wallet">Wallet</option>
+                                <option value="keys">Keys</option>
+                                <option value="laptop">Laptop</option>
+                                <option value="headphones">Headphones</option>
+                                <option value="jewelry">Jewelry</option>
+                                <option value="bag">Bag</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="books">Books</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                        <textarea id="foundDescription" rows="3" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"></textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Found Location</label>
+                            <select id="foundLocation" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                                <option value="">Select location</option>
+                                <option value="Library">Library</option>
+                                <option value="Cafeteria">Cafeteria</option>
+                                <option value="Gym">Gym</option>
+                                <option value="Lecture Hall A">Lecture Hall A</option>
+                                <option value="Lecture Hall B">Lecture Hall B</option>
+                                <option value="Student Center">Student Center</option>
+                                <option value="Parking Lot">Parking Lot</option>
+                                <option value="Dormitory">Dormitory</option>
+                                <option value="Computer Lab">Computer Lab</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">📍 Pickup Location</label>
+                            <input type="text" id="foundPickupLocation" placeholder="Where can they collect it?" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Image (optional)</label>
+                        <input type="file" id="foundImage" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">📧 Contact Information</label>
+                        <input type="email" id="foundContact" placeholder="your.email@example.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">📱 Mobile Number (Optional)</label>
+                        <input type="tel" id="foundMobile" placeholder="+91 98765 43210" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                        <div class="text-xs text-gray-500 mt-1">For faster pickup coordination</div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg">
+                            📝 Report Found Item
+                        </button>
+                        <button type="button" onclick="showPage('homePage')" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg">
+                            🏠 Back
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Dashboard Page -->
+    <div id="statsPage" class="page">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-indigo-600 mb-6">📊 Statistics Dashboard</h2>
+                
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-sm text-gray-500">Lost Items</div>
+                                <div class="text-2xl font-bold text-gray-800" id="totalLost">0</div>
+                            </div>
+                            <div class="text-3xl">🔍</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-sm text-gray-500">Found Items</div>
+                                <div class="text-2xl font-bold text-gray-800" id="totalFound">0</div>
+                            </div>
+                            <div class="text-3xl">✅</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-sm text-gray-500">Active Matches</div>
+                                <div class="text-2xl font-bold text-gray-800" id="totalMatches">0</div>
+                            </div>
+                            <div class="text-3xl">🎯</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-sm text-gray-500">Completed</div>
+                                <div class="text-2xl font-bold text-gray-800" id="totalCompleted">0</div>
+                            </div>
+                            <div class="text-3xl">🎉</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Success Rate -->
+                <div class="bg-white rounded-lg shadow p-6 mb-8">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">📈 Success Metrics</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-green-600" id="matchRate">0%</div>
+                            <div class="text-sm text-gray-500">Match Rate</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-blue-600" id="completionRate">0%</div>
+                            <div class="text-sm text-gray-500">Completion Rate</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-purple-600" id="avgConfidence">0%</div>
+                            <div class="text-sm text-gray-500">Avg Match Confidence</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">📅 Recent Activity</h3>
+                    <div id="recentActivity" class="space-y-2">
+                        <!-- Recent activity will be populated here -->
+                    </div>
+                </div>
+                
+                <button onclick="showPage('homePage')" class="mt-6 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg">
+                    🏠 Back to Home
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Reports Page -->
+    <div id="myReportsPage" class="page">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-blue-600 mb-6">📋 My Reports</h2>
+                
+                <!-- Search and Filter Section -->
+                <div class="bg-white rounded-lg shadow p-4 mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">🔍 Search</label>
+                            <input type="text" id="searchReports" placeholder="Search by name, description..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">📂 Filter Type</label>
+                            <select id="filterType" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="all">All Items</option>
+                                <option value="lost">Lost Items</option>
+                                <option value="found">Found Items</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">📅 Filter Status</label>
+                            <select id="filterStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="all">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="matched">Matched</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Active Reports -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Active Reports</h3>
+                    <div id="activeReportsContainer" class="space-y-4">
+                        <!-- Active reports will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Completed Reports -->
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4">✅ Completed Items</h3>
+                    <div id="completedReportsContainer" class="space-y-4">
+                        <!-- Completed reports will be populated here -->
+                    </div>
+                </div>
+                
+                <button onclick="showPage('homePage')" class="mt-6 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg">
+                    🏠 Back to Home
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Matches Page -->
+    <div id="matchesPage" class="page">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-purple-600 mb-6">AI Matches</h2>
+                <div id="matchesContainer" class="space-y-4">
+                    <!-- Matches will be populated here -->
+                </div>
+                <button onclick="showPage('homePage')" class="mt-6 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg">
+                    🏠 Back to Home
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="fixed top-4 right-4 z-50 space-y-2">
+        <!-- Notifications will appear here -->
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

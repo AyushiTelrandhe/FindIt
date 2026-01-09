@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launching FindIt AI...</title>
+    <meta http-equiv="refresh" content="2; url=index.html">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .spin {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center">
+    <div class="text-center">
+        <div class="mb-8">
+            <div class="text-6xl mb-4 spin">🚀</div>
+            <h1 class="text-4xl font-bold text-indigo-800 mb-2">Launching FindIt AI...</h1>
+            <p class="text-lg text-gray-600 pulse">Smart Lost & Found for Campuses</p>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg px-8 py-6 max-w-md mx-auto">
+            <div class="flex items-center justify-center space-x-3">
+                <div class="w-4 h-4 bg-blue-500 rounded-full animate-bounce"></div>
+                <div class="w-4 h-4 bg-indigo-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                <div class="w-4 h-4 bg-purple-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+            </div>
+            <p class="text-gray-500 mt-4 text-sm">Redirecting to app...</p>
+        </div>
+        
+        <div class="mt-8">
+            <a href="index.html" class="text-indigo-600 hover:text-indigo-800 underline text-sm">
+                Click here if not redirected automatically
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // Fallback redirect
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 2000);
+    </script>
+</body>
+</html>
